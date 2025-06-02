@@ -1,1 +1,40 @@
-<p>reports works!</p>
+<div class="container mt-4">
+    <div class="mb-4">
+        <h2 class="text-center border-bottom">Extensiones teléfonicas (Reportes)</h2>
+    </div>
+
+    <div class="mt-3">
+        <form (submit)="generateExitReportGeneral()" [formGroup]="general_exit_form" class="row">
+            <div class="col-12 d-flex gap-2">
+                <div class="mb-2 col-12 col-md-4">
+                    <label for="init_date" class="form-label">Fecha inicio</label>
+                    <input type="date" id="" class="form-control" formControlName="init_date" [max]="today"
+                        (change)="validateDates()">
+                    <div *ngIf="init_date && init_date.touched && init_date.invalid">
+                        <span class="text-sm text-danger" *ngIf="init_date.errors?.['required']">La fecha de inicio es
+                            obligatorio</span>
+                    </div>
+                </div>
+                <div class="mb-2 col-12 col-md-4">
+                    <label for="end_date" class="form-label">Fecha final</label>
+                    <input type="date" id="end_date" class="form-control" formControlName="end_date" [max]="today"
+                        (change)="validateDates()">
+                    <div *ngIf="end_date && end_date.touched && end_date.invalid">
+                        <span class="text-sm text-danger" *ngIf="end_date.errors?.['required']">La fecha de final es
+                            obligatorio</span>
+                        <span class="text-sm text-danger" *ngIf="end_date.errors?.['err_date']">La fecha final no debe ser menor</span>
+                    </div>
+                </div>
+
+                <div class="mb-2 col-12 col-md-4 d-flex"
+                    [ngClass]="end_date?.touched && end_date?.invalid || init_date?.touched && init_date?.invalid ? 'align-items-center':'align-items-end'">
+                    <div>
+                        <label class="form-label"></label>
+                        <button type="submit" class="btn btn-primary flex-1"
+                            [disabled]="general_exit_form.invalid">Reporte general salida</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
