@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ExtensionsService } from '../../../model/extensions.service';
+import { UtilsService } from '../../../utils/utils.service';
 
 @Component({
   selector: 'app-reports',
@@ -17,6 +18,7 @@ export class ReportsComponent implements OnInit {
   constructor(
     private readonly FormBuilder: FormBuilder,
     private readonly ExtensionsService: ExtensionsService,
+    private readonly UtilsService: UtilsService,
   ) {}
 
   ngOnInit() {
@@ -70,6 +72,10 @@ export class ReportsComponent implements OnInit {
 
     console.log(init_date.value);
     console.log(end_date.value);
+  }
+
+  async downloadExcel() {
+    await this.UtilsService.exportToExcel();
   }
 
 }
