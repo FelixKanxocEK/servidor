@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environtment } from '../../../environments/environment';
 import * as ExcelJS from 'exceljs';
 import * as FileSaver from 'file-saver'
+import { GeneralReportExitInterface } from '../model/interfaces/general_report_exit.interface';
 
 
 
@@ -16,7 +17,7 @@ export class UtilsService {
     return environtment.api;
   }
 
-  async exportToExcel() {
+  async exportToExcel(data: GeneralReportExitInterface) {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Reporte');
 
@@ -29,7 +30,7 @@ export class UtilsService {
     worksheet.getCell('H2').value = 'Costo';
     worksheet.getCell('H2').alignment = { horizontal: 'center' };
 
-    worksheet.getCell('I2').value = 'COSTO EJEMPLO XDXDXD';
+    worksheet.getCell('I2').value = data.total_cost;
     worksheet.getCell('I2').alignment = { horizontal: 'center' };
     /** INICIO TITULO DE LA HOJA DE EXCEL **/
 
@@ -41,7 +42,7 @@ export class UtilsService {
     worksheet.getCell('H3').value = 'Llamadas';
     worksheet.getCell('H3').alignment = { horizontal: 'center' };
 
-    worksheet.getCell('I3').value = '14510354';
+    worksheet.getCell('I3').value = data.total_calls;
     worksheet.getCell('I3').alignment = { horizontal: 'center' };
     /** INICIO SUBTITULO DE LA HOJA DE EXCEL **/
 
@@ -65,37 +66,41 @@ export class UtilsService {
       worksheet.getColumn(col_letter).width = column.width;
     });
 
-    // const data = [
-    //   { id: 1, name: 'Juan Perez', email: 'juan@example.com', isActive: true },
-    //   { id: 2, name: 'Ana Lopez', email: 'ana@example.com', isActive: true },
-    // ]
 
-    // console.log('Data a exportar:', data);
-    // console.log('Columnas definidas:', worksheet.columns.map(col => col.key));
-    // data.forEach(d => {
-    //   worksheet.addRow(d);
-    // })
+    let row = 5;
+    data.list_reports.forEach(report => {
+      worksheet.getCell('B' + row).value = report.agent;
+      worksheet.getCell('B' + row).alignment = { horizontal: 'center' };
 
+      worksheet.getCell('C' + row).value = report.Exten;
+      worksheet.getCell('C' + row).alignment = { horizontal: 'center' };
 
-    // worksheet.getRow(1).eachCell((cell) => {
-    //   cell.font = { bold: true, color: { argb: 'FFFFFFF' } };
-    //   cell.fill = {
-    //     type: 'pattern',
-    //     pattern: 'solid',
-    //     fgColor: { argb: 'FF0070C0' },
-    //   };
-    //   cell.alignment = { vertical: 'middle', horizontal: 'center' };
-    //   cell.border = {
-    //     top: { style: 'thin' },
-    //     bottom: { style: 'thin' },
+      worksheet.getCell('D' + row).value = report.Destino;
+      worksheet.getCell('D' + row).alignment = { horizontal: 'center' };
 
-    //   }
-    // })
+      worksheet.getCell('E' + row).value = report.Estado;
+      worksheet.getCell('E' + row).alignment = { horizontal: 'center' };
+
+      worksheet.getCell('F' + row).value = report.Fecha;
+      worksheet.getCell('F' + row).alignment = { horizontal: 'center' };
+  
+      worksheet.getCell('G' + row).value = report.Hora;
+      worksheet.getCell('G' + row).alignment = { horizontal: 'center' };
+
+      worksheet.getCell('H' + row).value = report.Duracion;
+      worksheet.getCell('H' + row).alignment = { horizontal: 'center' };
+
+      worksheet.getCell('I' + row).value = report.Costo;
+      worksheet.getCell('I' + row).alignment = { horizontal: 'center' };
+
+      row++;
+    })
 
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], {
       type: 'application/vnd.openxml-officedocument.spreadsheet.sheet',
     });
-    FileSaver.saveAs(blob, 'reporte.xlsx');
+    const date = (new Date().toLocaleDateString()).replace(/\//g, '-');
+    FileSaver.saveAs(blob, `reporte_${date}.xlsx`);
   }
 }

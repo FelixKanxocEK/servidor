@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { UtilsService } from '../utils/utils.service';
 import { lastValueFrom } from 'rxjs';
 import { Extension, Extensions } from '../pages/extensions/extensions/interfaces/extensions.interface';
+import { GeneralReportExitInterface } from './interfaces/general_report_exit.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -35,17 +36,20 @@ export class ExtensionsService {
     }
   }
 
-  async getGeneralReportExit(data: {init_date: string, end_date: string}) {
+  async getGeneralReportExit(data: {init_date: string, end_date: string}): Promise<GeneralReportExitInterface> {
     try {
-      const result = await lastValueFrom(this.HttpClient.post(`${this.UtilsService.API_URL}/extensions/general_report_exit`, {
+      const result = await lastValueFrom(this.HttpClient.post<GeneralReportExitInterface>(`${this.UtilsService.API_URL}/extensions/general_report_exit`, {
         ...data
       }));
     
-      console.log(result);
-      return [];
+      return result;
     } catch (error) {
       console.log(error, ' error');
-      return [];
+      return {
+        list_reports: [],
+        total_calls: 0,
+        total_cost: 0
+      };
     }
   }
 

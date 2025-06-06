@@ -37,9 +37,8 @@ export class ReportsComponent implements OnInit {
   get end_date() { return this.general_exit_form.get('end_date') || null }
 
   async generateExitReportGeneral() {
-    // event.preventDefault();
-    console.log(this.general_exit_form.value, ' valueeeeeeeeee');
-    await this.ExtensionsService.getGeneralReportExit(this.general_exit_form.value);
+    const result = await this.ExtensionsService.getGeneralReportExit(this.general_exit_form.value);
+    await this.UtilsService.exportToExcel(result);
   }
 
   /**
@@ -64,18 +63,7 @@ export class ReportsComponent implements OnInit {
         delete errors['err_date'];
         this.init_date?.setErrors(Object.keys(errors).length ? errors : null);
       }
-
-      console.log(init_date_ms, ' msss1')
-      console.log(end_date_ms, ' msss2')
-
     }
-
-    console.log(init_date.value);
-    console.log(end_date.value);
-  }
-
-  async downloadExcel() {
-    await this.UtilsService.exportToExcel();
   }
 
 }
